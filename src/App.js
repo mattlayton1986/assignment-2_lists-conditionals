@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import ValidationComponent from './ValidationComponent/ValidationComponent';
+import CharComponent from './CharComponent/CharComponent';
+
+class App extends Component {
+  
+  state = {
+    userInput: '',
+    userInputAsArray: []
+  }
+
+  inputChangedHandler = (event) => {
+    this.setState({
+      userInput: event.target.value
+    })
+  }
+
+  charClickedHandler = (index) => {
+    let stringArray = this.state.userInput.split('');
+    stringArray.splice(index, 1);
+
+    this.setState({
+      userInput: stringArray.join('')
+    })
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <input 
+          type="text"
+          value={this.state.userInput}
+          onChange={(event) => this.inputChangedHandler(event)} />
+        <p>You entered: {this.state.userInput}</p>
+        <ValidationComponent length={this.state.userInput.length} />
+        {
+          this.state.userInput.split('').map((char, index) => 
+            <CharComponent clicked={() => this.charClickedHandler(index)} key={index}>
+              {char}
+            </CharComponent>)
+        }
+      </div>
+    );
+  }
 }
 
 export default App;
